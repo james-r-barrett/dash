@@ -134,11 +134,13 @@ E065_df.replace('#NUM!', 0)
 
 E065_df = pd.read_csv('E065.csv')
 E065_df.rename(columns={'Protein.Group': 'E065_id'}, inplace=True)
-E065_df = E065_df._convert(numeric=True)
+E065_df = E065_df.replace('#NUM!', np.nan)
+#E065_df = E065_df._convert(numeric=True)
 E065_df = E065_df.replace(np.nan, 0)
 
 matched_id = lambda x: process.extractOne(x, df['identifier'], scorer=fuzz.partial_ratio)[2]  # here the [2] is the index from the extractOne function, used for mapping, partial_ratio ensures only complete matches are used
 E065_df['identifier'] = df.loc[E065_df["E065_id"].map(matched_id).values, 'identifier'].values  # takes the value from the prot_deg_id column, and matches against the identifier column df, then adds that column to df
+E065_df.rename(columns={'Min*(PG.Q.Value)': 'Min*(PG.Q.Value)_2'}, inplace=True)
 
 df9 = pd.merge(df8, E065_df, on = 'identifier', how = 'left').fillna('0') # Merge the dfs, using the identifier column, fill IDs with no value in prot_deg with dashes
 
