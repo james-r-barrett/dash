@@ -1,0 +1,6 @@
+dash
+pandas
+numpy
+flask
+plotly.express
+textwrap
